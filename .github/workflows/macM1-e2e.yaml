@@ -31,7 +31,7 @@ jobs:
       - name: add tools to PATH
         run: |
           mkdir -p ~/.rd/bin
-          cp -R ~/actions-runner/_work/rancher-desktop/rancher-desktop/resources/darwin/bin ~/.rd/bin
+          cp -rf ~/actions-runner/_work/rancher-desktop/rancher-desktop/resources/darwin/bin/ ~/.rd/bin/
           export PATH="~/.rd/bin:$PATH"
       - name: Run Rancher Desktop in dev
         run: |
@@ -51,8 +51,42 @@ jobs:
         with:
           name: e2etest-artifacts
           path: ./e2e/reports/*
-      - name: Clean all steps
-        uses: colpal/actions-clean@36e6ca1abd35efe61cb60f912bd7837f67887c8a
+      - name: Cleanup test environment
+        run: |
+          #set -x
+          cd $HOME/Library
+          pushd Logs/rancher-desktop
+          for x in *.log ; do
+           echo -n '' > $x
+          done
+          popd
+          rm -fr "Application Support/rancher-desktop"
+          rm -fr Preferences/rancher-desktop
+          rm -fr Caches/rancher-desktop/k3s-versions.json
+          cd /usr/local/bin
+          for x in helm kim kubectl nerdctl docker ; do
+           if [[ -L $x ]] ; then # && $(readlink $x):]] ; then
+           rm -f $x
+           fi
+          done
+          case "${1:-}" in
+          -sudo) ;;
+          --sudo) ;;
+          *)
+          # echo "Delete the sudo lima files"
+          sudo rm -fr /private/var/run/rancher-desktop-lima
+          sudo rm -f /private/etc/sudoers.d/zzzzz-xrancher-desktop-lima
+          sudo rm -fr /opt/rancher-desktop
+          ;;
+          esac
+        if: always()
+      - name: End stray processes
+        run: |
+          for x in nuxt qemu ; do
+           echo $x
+           ps auxww | grep $x
+          done
+          ps auxww | grep rancher | grep -vi -e goland
         if: always()
 
 
