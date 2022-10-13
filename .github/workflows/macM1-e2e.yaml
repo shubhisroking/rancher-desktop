@@ -63,6 +63,7 @@ jobs:
           rm -fr "Application Support/rancher-desktop"
           rm -fr Preferences/rancher-desktop
           rm -fr Caches/rancher-desktop/k3s-versions.json
+          rm -fr $HOME/.rd/bin
           cd /usr/local/bin
           for x in helm kim kubectl nerdctl docker ; do
            if [[ -L $x ]] ; then # && $(readlink $x):]] ; then
