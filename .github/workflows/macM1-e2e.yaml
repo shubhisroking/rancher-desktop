@@ -35,7 +35,7 @@ jobs:
           export PATH="~/.rd/bin:$PATH"
       - name: Run Rancher Desktop in dev
         run: |
-          npm run dev --no-modal-dialogs &
+          npm run dev -- --no-modal-dialogs &
           sleep 300
           ~/.rd/bin/rdctl shutdown
           wait
@@ -63,8 +63,7 @@ jobs:
           rm -fr "Application Support/rancher-desktop"
           rm -fr Preferences/rancher-desktop
           rm -fr Caches/rancher-desktop/k3s-versions.json
-          rm -fr $HOME/.rd/bin
-          cd /usr/local/bin
+          cd $HOME/.rd/bin
           for x in helm kim kubectl nerdctl docker ; do
            if [[ -L $x ]] ; then # && $(readlink $x):]] ; then
            rm -f $x
