@@ -43,6 +43,7 @@ jobs:
         continue-on-error: false
         run: |
           mkdir -p ~/Library/Preferences/rancher-desktop
+          touch ~/Library/Preferences/rancher-desktop/settings.json
           cat > "~/Library/Preferences/rancher-desktop/settings.json" <<EOT
           {
             "version": 4,
