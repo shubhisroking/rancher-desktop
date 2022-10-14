@@ -41,7 +41,20 @@ jobs:
           wait
       - name: Run e2e Tests
         continue-on-error: false
-        run: npm run test:e2e
+        run: |
+          cat <<EOF > $RD_CONFIG_FILE
+          {
+            "version": 4,
+            "kubernetes": {
+            "memoryInGB": 6,
+            "suppressSudo": true
+          },
+          "updater": false,
+          "pathManagementStrategy": "rcfiles"
+          }
+          EOF
+          }
+          npm run test:e2e
       - name: Failed tests
         if: failure()
         run: mkdir -p ./e2e/reports
