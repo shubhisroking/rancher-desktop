@@ -69,16 +69,6 @@ jobs:
            rm -f $x
            fi
           done
-          case "${1:-}" in
-          -sudo) ;;
-          --sudo) ;;
-          *)
-          # echo "Delete the sudo lima files"
-          sudo rm -fr /private/var/run/rancher-desktop-lima
-          sudo rm -f /private/etc/sudoers.d/zzzzz-xrancher-desktop-lima
-          sudo rm -fr /opt/rancher-desktop
-          ;;
-          esac
         if: always()
       - name: End stray processes
         run: |
