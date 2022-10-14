@@ -42,7 +42,7 @@ jobs:
       - name: Run e2e Tests
         continue-on-error: false
         run: |
-          cat <<EOF > $RD_CONFIG_FILE
+          cat <<EOF > "$RD_CONFIG_FILE"
           {
             "version": 4,
             "kubernetes": {
