@@ -42,19 +42,25 @@ jobs:
       - name: Run e2e Tests
         continue-on-error: false
         run: |
-          cat <<EOF > "$RD_CONFIG_FILE"
+          mkdir -p ~/Library/Preferences/rancher-desktop
+          cat > "~/Library/Preferences/rancher-desktop/settings.json" <<EOT
           {
             "version": 4,
             "kubernetes": {
-            "memoryInGB": 6,
-            "suppressSudo": true
-          },
-          "updater": false,
-          "pathManagementStrategy": "rcfiles"
+              "memoryInGB": 6,
+              "enabled": true,
+              },
+              "suppressSudo": true,
+            },
+            "updater": false,
+            "debug": false,
+            "pathManagementStrategy": "rcfiles",
+            "diagnostics": {
+              "showMuted": false,
+              "mutedChecks": {}
+            }
           }
-          EOF
-          }
-          npm run test:e2e
+          EOT
       - name: Failed tests
         if: failure()
         run: mkdir -p ./e2e/reports
