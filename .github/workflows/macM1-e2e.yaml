@@ -62,6 +62,7 @@ jobs:
             }
           }
           EOT
+          npm run test:e2e
       - name: Failed tests
         if: failure()
         run: mkdir -p ./e2e/reports
