@@ -60,7 +60,7 @@ jobs:
               "mutedChecks": {}
             }
           }'
-        dir: $HOME/Library/Preferences/rancher-desktop/
+          dir: '$HOME/Library/Preferences/rancher-desktop/'
       - name: Run e2e Tests
         continue-on-error: false
         run: npm run test:e2e
