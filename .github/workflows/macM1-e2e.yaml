@@ -39,8 +39,8 @@ jobs:
           sleep 300
           $HOME/.rd/bin/rdctl shutdown
           wait
+      - run:  mkdir -p $HOME/Library/Preferences/rancher-desktop
       - name: Supress sudo in settings.json
-        run:  mkdir -p $HOME/Library/Preferences/rancher-desktop
         uses: jsdaniell/create-json@4742703ec6e4f2ab900d1a82fdc9c2b3c5624b4d
         with:
         name: "settings.json"
