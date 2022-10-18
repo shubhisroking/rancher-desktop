@@ -43,8 +43,8 @@ jobs:
       - name: Supress sudo in settings.json
         uses: jsdaniell/create-json@4742703ec6e4f2ab900d1a82fdc9c2b3c5624b4d
         with:
-        name: "settings.json"
-        json: '{
+          name: "settings.json"
+          json: '{
             "version": 4,
             "kubernetes": {
               "memoryInGB": 6,
