@@ -48,16 +48,10 @@ jobs:
             "version": 4,
             "kubernetes": {
               "memoryInGB": 6,
-              "enabled": true,
-              },
-              "suppressSudo": true,
+              "suppressSudo": true
+            },
             "updater": false,
-            "debug": false,
-            "pathManagementStrategy": "rcfiles",
-            "diagnostics": {
-              "showMuted": false,
-              "mutedChecks": {}
-            }
+            "pathManagementStrategy": "rcfiles"
           }
           EOF
       # - name: Supress sudo in settings.json
