@@ -33,13 +33,14 @@ jobs:
           mkdir -p $HOME/.rd/bin
           cp -rf $HOME/actions-runner/_work/rancher-desktop/rancher-desktop/resources/darwin/bin/ ~/.rd/bin/
           export PATH="$HOME/.rd/bin:$PATH"
-      - name: Run Rancher Desktop in dev
+      #- name: Run Rancher Desktop in dev
+      #  run: |
+      #    npm run dev -- --no-modal-dialogs &
+      #    sleep 300
+      #    $HOME/.rd/bin/rdctl shutdown
+      #    wait
+      - name: Suppress sudo before running e2e tests
         run: |
-          npm run dev -- --no-modal-dialogs &
-          sleep 300
-          $HOME/.rd/bin/rdctl shutdown
-          wait
-      - run: |
           mkdir -p $HOME/Library/Preferences/rancher-desktop
           touch $HOME/Library/Preferences/rancher-desktop/settings.json
           cat <<EOF > $HOME/Library/Preferences/rancher-desktop/settings.json
