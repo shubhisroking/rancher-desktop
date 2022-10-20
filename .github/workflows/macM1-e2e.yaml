@@ -3,9 +3,6 @@ name: e2e tests on Mac M1
 on:
   schedule:
   - cron: '12 1 * * 1-5'
-    branches:
-      - test-backup
-
 
 jobs:
 
