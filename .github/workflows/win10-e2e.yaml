@@ -6,7 +6,7 @@ on:
         test-backup
 
 jobs:
-git
+
   e2e-tests:
     timeout-minutes: 45
     runs-on: [self-hosted, x64, win11]
