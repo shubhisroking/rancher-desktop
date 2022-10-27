@@ -6,7 +6,7 @@ on:
         test-backup
 
 jobs:
-
+git
   e2e-tests:
     timeout-minutes: 45
     runs-on: [self-hosted, x64, win11]
@@ -64,7 +64,7 @@ jobs:
           -NoProfile -NonInteractive -ExecutionPolicy RemoteSigned \
           -File "$PLUGINSDIR\remove-from-path.ps1" "$INSTDIR"'
           Pop $R0
-          Remove-Item $HOME/AppData/Local/rancher-desktop -Recurse -Force
+          # Remove-Item $HOME/AppData/Local/rancher-desktop -Recurse -Force
           Remove-Item $HOME/AppData/Local/rancher-desktop-updater -Recurse -Force
           Remove-Item $HOME/AppData/Roaming/rancher-desktop -Recurse -Force
           Remove-Item '$HOME/AppData/Local/Programs/Rancher Desktop' -Recurse -Force
