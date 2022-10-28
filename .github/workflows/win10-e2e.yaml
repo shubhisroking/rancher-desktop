@@ -10,6 +10,7 @@ jobs:
   e2e-tests:
     timeout-minutes: 45
     runs-on: [self-hosted, x64, win11]
+    shell: pwsh
     steps:
       - uses: actions/checkout@v3
         with:
@@ -21,17 +22,16 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: '^1.18'
+      - uses: actions/setup-python@v4
+      - name: Define Execution Policy
+        run: Set-ExecutionPolicy Bypass
       - name: Install dependencies
         run: npm ci
         #The next 2 steps are a workaround for an unexpected failure in launching electron before running e2e tests
         #Such failure is addressed in issue #2915
       - name: add tools to PATH
         run: |
-          File "/oname=$PLUGINSDIR\add-to-path.ps1" "${BUILD_RESOURCES_DIR}\add-to-path.ps1"
-          nsExec::ExecToLog 'powershell.exe \
-          -NoProfile -NonInteractive -ExecutionPolicy RemoteSigned \
-          -File "$PLUGINSDIR\add-to-path.ps1" "$INSTDIR"'
-          Pop $R0
+          '& "C:\actions-runner\_work\rancher-desktop\rancher-desktop\build\add-to-path.ps1" -InstallDir "$HOME\AppData\Local\Programs\Rancher Desktop\"'
       #- name: Run Rancher Desktop in dev
       #  run: |
       #    npm run dev -- --no-modal-dialogs &
@@ -53,17 +53,9 @@ jobs:
       - name: Cleanup test environment
         run: |
           # Uninstall Priviliged Service
-          File "/oname=$PLUGINSDIR\uninstall-privileged-service.ps1" "${BUILD_RESOURCES_DIR}\uninstall-privileged-service.ps1"
-          nsExec::ExecToLog 'powershell.exe \
-          -NoProfile -NonInteractive -ExecutionPolicy RemoteSigned \
-          -File "$PLUGINSDIR\uninstall-privileged-service.ps1"'
-          Pop $R0
+          '& "C:\actions-runner\_work\rancher-desktop\rancher-desktop\build\uninstall-privileged-service.ps1"'
           # Remove the bin directory from the PATH
-          File "/oname=$PLUGINSDIR\remove-from-path.ps1" "${BUILD_RESOURCES_DIR}\remove-from-path.ps1"
-          nsExec::ExecToLog 'powershell.exe \
-          -NoProfile -NonInteractive -ExecutionPolicy RemoteSigned \
-          -File "$PLUGINSDIR\remove-from-path.ps1" "$INSTDIR"'
-          Pop $R0
+          '& "C:\actions-runner\_work\rancher-desktop\rancher-desktop\build\remove-from-path.ps1" -InstallDir "$HOME\AppData\Local\Programs\Rancher Desktop\"'
           # Remove-Item $HOME/AppData/Local/rancher-desktop -Recurse -Force
           Remove-Item $HOME/AppData/Local/rancher-desktop-updater -Recurse -Force
           Remove-Item $HOME/AppData/Roaming/rancher-desktop -Recurse -Force
