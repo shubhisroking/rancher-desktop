@@ -28,7 +28,7 @@ jobs:
           #Install scoop
           iwr -useb get.scoop.sh | iex
           #Install python
-          scoop install python
+          scoop install git python unzip
       - name: Define Execution Policy
         run: Set-ExecutionPolicy Bypass -Scope CurrentUser -Force
       - name: Install dependencies
