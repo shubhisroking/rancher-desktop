@@ -23,9 +23,12 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: '^1.18'
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+      - name: Install Python from scoop
+        run: |
+          #Install scoop
+          iwr -useb get.scoop.sh | iex
+          #Install python
+          scoop install python
       - name: Define Execution Policy
         run: Set-ExecutionPolicy Bypass -Scope CurrentUser -Force
       - name: Install dependencies
