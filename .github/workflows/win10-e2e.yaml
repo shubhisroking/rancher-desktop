@@ -25,12 +25,10 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: '^1.18'
-      - name: Install scoop
+      - name: Install scoop and additional dependencies
         run: |
           iwr -useb get.scoop.sh | iex
           Add-Content $env:GITHUB_PATH "$HOME\scoop\shims"
-      - name: Install additional dependencies
-        run: |
           scoop install git python unzip
           Add-Content $env:GITHUB_PATH "$HOME\scoop\apps\python\current\Scripts"
           Add-Content $env:GITHUB_PATH "$HOME\scoop\apps\unzip\current"
