@@ -35,7 +35,7 @@ jobs:
           Add-Content $env:GITHUB_PATH "$HOME\scoop\apps\python\current\Scripts"
           Add-Content $env:GITHUB_PATH "$HOME\scoop\apps\unzip\current"
           Add-Content $env:GITHUB_PATH "$HOME\scoop\apps\git\current\bin"
-     - name: Install dependencies
+      - name: Install dependencies
         run: npm ci
         #The next 2 steps are a workaround for an unexpected failure in launching electron before running e2e tests
         #Such failure is addressed in issue #2915
