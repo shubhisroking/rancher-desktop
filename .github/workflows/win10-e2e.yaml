@@ -48,7 +48,7 @@ jobs:
         #Such failure is addressed in issue #2915
       - name: add tools to PATH
         run: |
-          Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/add-to-path.ps1" -InstallDir "$HOME/AppData/Local/Programs/Rancher Desktop/" -Verb runAs'
+          & "C:\actions-runner\_work\rancher-desktop\rancher-desktop\build\add-to-path.ps1" -InstallDir "$HOME\AppData\Local\Programs\Rancher Desktop\" -Verb runAs
       #- name: Run Rancher Desktop in dev
       #  run: |
       #    npm run dev -- --no-modal-dialogs &
