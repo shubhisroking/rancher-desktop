@@ -28,13 +28,13 @@ jobs:
       - name: Install scoop
         run: |
           iwr -useb get.scoop.sh | iex
-          echo "$HOME/scoop/shims" >> $GITHUB_PATH
+          echo "$HOME/scoop/shims" >> $env:GITHUB_PATH
       - name: Install additional dependencies
         run: |
           scoop install git python unzip
-          echo "$HOME/scoop/apps/python/current/Scripts" >> $GITHUB_PATH
-          echo "$HOME/scoop/apps/unzip/current" >> $GITHUB_PATH
-          echo "$HOME/scoop/apps/git/current/bin" >> $GITHUB_PATH
+          echo "$HOME/scoop/apps/python/current/Scripts" >> $env:GITHUB_PATH
+          echo "$HOME/scoop/apps/unzip/current" >> $env:GITHUB_PATH
+          echo "$HOME/scoop/apps/git/current/bin" >> $env:GITHUB_PATH
       - name: Install node dependencies
         run: npm ci
         #The next 2 steps are a workaround for an unexpected failure in launching electron before running e2e tests
