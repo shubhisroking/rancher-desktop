@@ -39,8 +39,8 @@ jobs:
           echo "$HOME/scoop/apps/unzip/current" >> $env:GITHUB_PATH
       - name: Install python
         run: |
-        scoop install python
-        echo "$HOME/scoop/apps/python/current/Scripts" >> $env:GITHUB_PATH
+          scoop install python
+          echo "$HOME/scoop/apps/python/current/Scripts" >> $env:GITHUB_PATH
       - name: Install node dependencies
         run: npm ci
         #The next 2 steps are a workaround for an unexpected failure in launching electron before running e2e tests
