@@ -25,15 +25,17 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: '^1.18'
-      - name: Install scoop and additional dependencies
+      - name: Install scoop
         run: |
           iwr -useb get.scoop.sh | iex
-          Add-Content $env:GITHUB_PATH "$HOME\scoop\shims"
+          echo "$HOME\scoop\shims" >> $GITHUB_PATH
+      - name: Install additional dependencies
+        run: |
           scoop install git python unzip
-          Add-Content $env:GITHUB_PATH "$HOME\scoop\apps\python\current\Scripts"
-          Add-Content $env:GITHUB_PATH "$HOME\scoop\apps\unzip\current"
-          Add-Content $env:GITHUB_PATH "$HOME\scoop\apps\git\current\bin"
-      - name: Install dependencies
+          echo "$HOME\scoop\apps\python\current\Scripts" >> $GITHUB_PATH
+          echo "$HOME\scoop\apps\unzip\current" >> $GITHUB_PATH
+          echo "$HOME\scoop\apps\git\current\bin" >> $GITHUB_PATH
+      - name: Install node dependencies
         run: npm ci
         #The next 2 steps are a workaround for an unexpected failure in launching electron before running e2e tests
         #Such failure is addressed in issue #2915
