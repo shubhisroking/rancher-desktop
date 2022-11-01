@@ -31,6 +31,7 @@ jobs:
           echo "$HOME/scoop/shims" >> $env:GITHUB_PATH
       - name: Install git
         run: |
+          scoop config MSIEXTRACT_USE_LESSMSI true
           scoop install git
           echo "$HOME/scoop/apps/git/current/bin" >> $env:GITHUB_PATH
       - name: Install unzip
