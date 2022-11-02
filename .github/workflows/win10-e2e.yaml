@@ -60,21 +60,28 @@ jobs:
         run: npm run test:e2e
       - name: Failed tests
         if: failure()
-        run: mkdir -p ./e2e/reports
+        run: |
+          if (Test-Path "./e2e/reports-win11") {
+            Write-Host "Directory already exists. Not creating..."
+          } else {
+            New-Item -Path "./e2e/reports-win11" -Force -ItemType Directory
+          }
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: e2etest-artifacts
-          path: ./e2e/reports/*
+          path: ./e2e/reports-win11/*
       - name: Cleanup test environment
         run: |
+
           # Uninstall Priviliged Service
           'Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/uninstall-privileged-service.ps1" -Verb runAs'
           # Remove the bin directory from the PATH
           'Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/remove-from-path.ps1" -InstallDir "$HOME/AppData/Local/Programs/Rancher Desktop/" -Verb runAs'
           # Remove-Item $HOME/AppData/Local/rancher-desktop -Recurse -Force
-          Remove-Item $HOME/AppData/Local/rancher-desktop-updater -Recurse -Force
+          #Remove-Item $HOME/AppData/Local/rancher-desktop-updater -Recurse -Force
           Remove-Item $HOME/AppData/Roaming/rancher-desktop -Recurse -Force
           Remove-Item '$HOME/AppData/Local/Programs/Rancher Desktop' -Recurse -Force
         if: always()
