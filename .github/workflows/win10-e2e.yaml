@@ -62,7 +62,7 @@ jobs:
         if: failure()
         run: |
           if (Test-Path "./e2e/reports-win11") {
-            Write-Host "Directory already exists. Not creating..."
+            Write-Host "Directory already exists. Not creating new one..."
           } else {
             New-Item -Path "./e2e/reports-win11" -Force -ItemType Directory
           }
@@ -80,10 +80,8 @@ jobs:
           'Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/uninstall-privileged-service.ps1" -Verb runAs'
           # Remove the bin directory from the PATH
           'Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/remove-from-path.ps1" -InstallDir "$HOME/AppData/Local/Programs/Rancher Desktop/" -Verb runAs'
-          # Remove-Item $HOME/AppData/Local/rancher-desktop -Recurse -Force
-          Remove-Item "$HOME/AppData/Local/rancher-desktop-updater" -Recurse -Force
-          Remove-Item "$HOME/AppData/Roaming/rancher-desktop" -Recurse -Force
-          Remove-Item "$HOME/AppData/Local/Programs/Rancher Desktop" -Recurse -Force
+          Remove-Item $HOME/AppData/Local/rancher-desktop/* -Exclude *Logs* -Recurse -Force
+          Remove-Item -Path "$HOME/AppData/Roaming/rancher-desktop" -Recurse -Force
         if: always()
       #- name: End stray processes
       #  run: |
