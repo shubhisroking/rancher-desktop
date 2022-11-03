@@ -31,7 +31,7 @@ jobs:
           echo "$HOME/scoop/shims" >> $env:GITHUB_PATH
       - name: Install git
         run: |
-          scoop config MSIEXTRACT_USE_LESSMSI true
+          scoop config USE_LESSMSI true
           scoop install git
           echo "$HOME/scoop/apps/git/current/bin" >> $env:GITHUB_PATH
       - name: Install unzip
@@ -42,6 +42,16 @@ jobs:
         run: |
           scoop install python
           echo "$HOME/scoop/apps/python/current/Scripts" >> $env:GITHUB_PATH
+       - name: Cleanup test environment
+        run: |
+
+          # Uninstall Priviliged Service
+          Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/uninstall-privileged-service.ps1" -Verb runAs
+          # Remove the bin directory from the PATH
+          Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/remove-from-path.ps1" -InstallDir "$HOME/AppData/Local/Programs/Rancher Desktop/" -Verb runAs
+          Remove-Item $HOME/AppData/Local/rancher-desktop/* -Exclude *Logs* -Recurse -Force
+          Remove-Item -Path "$HOME/AppData/Roaming/rancher-desktop" -Recurse -Force
+        if: always()
       - name: Install node dependencies
         run: npm ci
         #The next 2 steps are a workaround for an unexpected failure in launching electron before running e2e tests
@@ -73,16 +83,6 @@ jobs:
         with:
           name: e2etest-artifacts
           path: ./e2e/reports-win11/*
-      - name: Cleanup test environment
-        run: |
-
-          # Uninstall Priviliged Service
-          'Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/uninstall-privileged-service.ps1" -Verb runAs'
-          # Remove the bin directory from the PATH
-          'Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/remove-from-path.ps1" -InstallDir "$HOME/AppData/Local/Programs/Rancher Desktop/" -Verb runAs'
-          Remove-Item $HOME/AppData/Local/rancher-desktop/* -Exclude *Logs* -Recurse -Force
-          Remove-Item -Path "$HOME/AppData/Roaming/rancher-desktop" -Recurse -Force
-        if: always()
       #- name: End stray processes
       #  run: |
       #    for x in nuxt qemu ; do
