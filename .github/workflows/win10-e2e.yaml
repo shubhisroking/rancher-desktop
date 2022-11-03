@@ -42,15 +42,15 @@ jobs:
         run: |
           scoop install python
           echo "$HOME/scoop/apps/python/current/Scripts" >> $env:GITHUB_PATH
-       - name: Cleanup test environment
-        run: |
+      - name: Cleanup test environment
+      run: |
 
-          # Uninstall Priviliged Service
-          Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/uninstall-privileged-service.ps1" -Verb runAs
-          # Remove the bin directory from the PATH
-          Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/remove-from-path.ps1" -InstallDir "$HOME/AppData/Local/Programs/Rancher Desktop/" -Verb runAs
-          Remove-Item $HOME/AppData/Local/rancher-desktop/* -Exclude *Logs* -Recurse -Force
-          Remove-Item -Path "$HOME/AppData/Roaming/rancher-desktop" -Recurse -Force
+        # Uninstall Priviliged Service
+        Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/uninstall-privileged-service.ps1" -Verb runAs
+        # Remove the bin directory from the PATH
+        Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/remove-from-path.ps1" -InstallDir "$HOME/AppData/Local/Programs/Rancher Desktop/" -Verb runAs
+        Remove-Item $HOME/AppData/Local/rancher-desktop/* -Exclude *Logs* -Recurse -Force
+        Remove-Item -Path "$HOME/AppData/Roaming/rancher-desktop" -Recurse -Force
         if: always()
       - name: Install node dependencies
         run: npm ci
