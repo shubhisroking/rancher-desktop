@@ -80,5 +80,4 @@ jobs:
           name: e2etest-artifacts
           path: ./e2e/reports-win11/*
       - name: Uninstall Privileged Services
-      # Uninstall Priviliged Service
-          Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/uninstall-privileged-service.ps1" -Verb runAs
+        run: Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/uninstall-privileged-service.ps1" -Verb runAs
