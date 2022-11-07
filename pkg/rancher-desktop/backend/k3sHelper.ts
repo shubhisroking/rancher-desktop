@@ -862,10 +862,12 @@ export default class K3sHelper extends events.EventEmitter {
       const kubeDir = path.join(home, '.kube');
 
       await fs.promises.mkdir(kubeDir, { recursive: true });
+      console.log(`QQQ: k8s config from pkg/rancher-desktop/backend/k3sHelper.ts: ${ path.join(kubeDir, 'config') }`);
 
       return path.join(kubeDir, 'config');
     }
 
+    console.log(`QQQ: no home dir!???`);
     throw new Error(`Could not find a kubeconfig`);
   }
 
@@ -911,7 +913,10 @@ export default class K3sHelper extends events.EventEmitter {
 
         workConfig.currentContext = contextName;
       }
+      console.log(`QQQ: -K3sHelper.findKubeConfigToUpdate(${ contextName })`);
       const userPath = await K3sHelper.findKubeConfigToUpdate(contextName);
+
+      console.log(`QQQ: +K3sHelper.findKubeConfigToUpdate(${ contextName }), userPath=${ userPath }`);
       const userConfig = new KubeConfig();
 
       // @kubernetes/client-node throws when merging things that already exist
