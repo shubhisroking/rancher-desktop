@@ -1,0 +1,82 @@
+name: e2e tests on Windows
+
+on:
+  push:
+    branches:
+        test-backupc
+
+jobs:
+
+  e2e-tests:
+    timeout-minutes: 80
+    runs-on: [self-hosted, x64, win11]
+    env:
+      shell: pwsh
+      RUNNER_HOME: C:/Windows/ServiceProfiles/NetworkService
+    steps:
+      - name: Define Execution Policy
+        run: Set-ExecutionPolicy Bypass -Scope CurrentUser -Force
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          ref: main
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '^1.18'
+      - name: Install scoop
+        continue-on-error: true
+        run: |
+          iwr -useb get.scoop.sh | iex
+          echo "$env:RUNNER_HOME/scoop/shims" >> $env:GITHUB_PATH
+      - name: Install git
+        continue-on-error: true
+        run: |
+          scoop config USE_LESSMSI true
+          scoop install git
+          echo "$env:RUNNER_HOME/scoop/apps/git/current/bin" >> $env:GITHUB_PATH
+      - name: Install unzip
+        continue-on-error: true
+        run: |
+          scoop install unzip
+          echo "$env:RUNNER_HOME/scoop/apps/unzip/current" >> $env:GITHUB_PATH
+      - name: Install python
+        continue-on-error: true
+        run: |
+          scoop install python
+          echo "$env:RUNNER_HOME/scoop/apps/python/current/Scripts" >> $env:GITHUB_PATH
+      - name: Cleanup test environment
+        run: |
+          if (Test-Path "$env:RUNNER_HOME/AppData/Local/rancher-desktop") {
+            Remove-Item -Path "$env:RUNNER_HOME/AppData/Local/rancher-desktop" -Recurse -Force
+          }
+          if (Test-Path "$env:RUNNER_HOME/AppData/Roaming/rancher-desktop") {
+            Remove-Item -Path "$env:RUNNER_HOME/AppData/Roaming/rancher-desktop" -Recurse -Force
+          }
+        if: always()
+      - name: Install node dependencies
+        run: npm ci
+      - name: Run e2e Tests
+        continue-on-error: false
+        run: |
+          echo $env:RUNNER_HOME
+          npm run test:e2e
+      - name: Failed tests
+        if: failure()
+        run: |
+          if (Test-Path "./e2e/reports-win11") {
+            Write-Host "Directory already exists. Not creating new one..."
+          } else {
+            New-Item -Path "./e2e/reports-win11" -Force -ItemType Directory
+          }
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: e2etest-artifacts
+          path: ./e2e/reports-win11/*
+      - name: Uninstall Privileged Services
+        run: |
+          Start-Process -FilePath "C:/actions-runner/_work/rancher-desktop/rancher-desktop/build/uninstall-privileged-service.ps1" -Verb runAs
