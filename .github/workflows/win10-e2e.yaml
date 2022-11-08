@@ -56,56 +56,10 @@ jobs:
           }
         if: always()
       - name: Install node dependencies
-        run: |
-          echo HOME: $env:HOME
-          echo HOMEDRIVE: $env:HOMEDRIVE
-          echo HOMEPATH: $env:HOMEPATH
-          echo USERPROFILE: $env:USERPROFILE
-          echo Trying USERPROFILE/.kube/config
-          dir $env:USERPROFILE/.kube/config -EA Ignore
-          echo Trying HOME/.kube/config
-          dir $env:HOME/.kube/config -EA Ignore
-          echo Trying HD/HP/.kube/config
-          dir $env:HOMEDRIVE$ENV:HOMEPATH/.kube/config -EA Ignore
-          echo "Done trying stuff - thank you for your patience"
-          npm ci
-          echo HOME: $env:HOME
-          echo HOMEDRIVE: $env:HOMEDRIVE
-          echo HOMEPATH: $env:HOMEPATH
-          echo USERPROFILE: $env:USERPROFILE
-          echo Trying USERPROFILE/.kube/config
-          dir $env:USERPROFILE/.kube/config -EA Ignore
-          echo Trying HOME/.kube/config
-          dir $env:HOME/.kube/config -EA Ignore
-          echo Trying HD/HP/.kube/config
-          dir $env:HOMEDRIVE$ENV:HOMEPATH/.kube/config -EA Ignore
-          echo "Done trying stuff - thank you for your patience"
+        run: npm ci
       - name: Run e2e Tests
         continue-on-error: false
-        run: |
-          echo HOME: $env:HOME
-          echo HOMEDRIVE: $env:HOMEDRIVE
-          echo HOMEPATH: $env:HOMEPATH
-          echo USERPROFILE: $env:USERPROFILE
-          echo Trying USERPROFILE/.kube/config
-          dir $env:USERPROFILE/.kube/config -EA Ignore
-          echo Trying HOME/.kube/config
-          dir $env:HOME/.kube/config -EA Ignore
-          echo Trying HD/HP/.kube/config
-          dir $env:HOMEDRIVE$ENV:HOMEPATH/.kube/config -EA Ignore
-          echo "Done trying stuff - thank you for your patience"
-          npm run test:e2e
-          echo HOME: $env:HOME
-          echo HOMEDRIVE: $env:HOMEDRIVE
-          echo HOMEPATH: $env:HOMEPATH
-          echo USERPROFILE: $env:USERPROFILE
-          echo Trying USERPROFILE/.kube/config
-          dir $env:USERPROFILE/.kube/config -EA Ignore
-          echo Trying HOME/.kube/config
-          dir $env:HOME/.kube/config -EA Ignore
-          echo Trying HD/HP/.kube/config
-          dir $env:HOMEDRIVE$ENV:HOMEPATH/.kube/config -EA Ignore
-          echo "Done trying stuff - thank you for your patience"
+        run: npm run test:e2e
       - name: Failed tests
         if: failure()
         run: |
