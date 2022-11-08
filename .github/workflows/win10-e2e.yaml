@@ -12,7 +12,6 @@ jobs:
     runs-on: [self-hosted, x64, win11]
     env:
       shell: pwsh
-      RUNNER_HOME: C:/Windows/ServiceProfiles/NetworkService
     steps:
       - name: Define Execution Policy
         run: Set-ExecutionPolicy Bypass -Scope CurrentUser -Force
@@ -30,39 +29,83 @@ jobs:
         continue-on-error: true
         run: |
           iwr -useb get.scoop.sh | iex
-          echo "$env:RUNNER_HOME/scoop/shims" >> $env:GITHUB_PATH
+          echo "$HOME/scoop/shims" >> $env:GITHUB_PATH
       - name: Install git
         continue-on-error: true
         run: |
           scoop config USE_LESSMSI true
           scoop install git
-          echo "$env:RUNNER_HOME/scoop/apps/git/current/bin" >> $env:GITHUB_PATH
+          echo "$HOME/scoop/apps/git/current/bin" >> $env:GITHUB_PATH
       - name: Install unzip
         continue-on-error: true
         run: |
           scoop install unzip
-          echo "$env:RUNNER_HOME/scoop/apps/unzip/current" >> $env:GITHUB_PATH
+          echo "$HOME/scoop/apps/unzip/current" >> $env:GITHUB_PATH
       - name: Install python
         continue-on-error: true
         run: |
           scoop install python
-          echo "$env:RUNNER_HOME/scoop/apps/python/current/Scripts" >> $env:GITHUB_PATH
+          echo "$HOME/scoop/apps/python/current/Scripts" >> $env:GITHUB_PATH
       - name: Cleanup test environment
         run: |
-          if (Test-Path "$env:RUNNER_HOME/AppData/Local/rancher-desktop") {
-            Remove-Item -Path "$env:RUNNER_HOME/AppData/Local/rancher-desktop" -Recurse -Force
+          if (Test-Path "$HOME/AppData/Local/rancher-desktop") {
+            Remove-Item -Path "$HOME/AppData/Local/rancher-desktop" -Recurse -Force
           }
-          if (Test-Path "$env:RUNNER_HOME/AppData/Roaming/rancher-desktop") {
-            Remove-Item -Path "$env:RUNNER_HOME/AppData/Roaming/rancher-desktop" -Recurse -Force
+          if (Test-Path "$HOME/AppData/Roaming/rancher-desktop") {
+            Remove-Item -Path "$HOME/AppData/Roaming/rancher-desktop" -Recurse -Force
           }
         if: always()
       - name: Install node dependencies
-        run: npm ci
+        run: |
+          echo HOME: $env:HOME
+          echo HOMEDRIVE: $env:HOMEDRIVE
+          echo HOMEPATH: $env:HOMEPATH
+          echo USERPROFILE: $env:USERPROFILE
+          echo Trying USERPROFILE/.kube/config
+          dir $env:USERPROFILE/.kube/config -EA Ignore
+          echo Trying HOME/.kube/config
+          dir $env:HOME/.kube/config -EA Ignore
+          echo Trying HD/HP/.kube/config
+          dir $env:HOMEDRIVE$ENV:HOMEPATH/.kube/config -EA Ignore
+          echo "Done trying stuff - thank you for your patience"
+          npm ci
+          echo HOME: $env:HOME
+          echo HOMEDRIVE: $env:HOMEDRIVE
+          echo HOMEPATH: $env:HOMEPATH
+          echo USERPROFILE: $env:USERPROFILE
+          echo Trying USERPROFILE/.kube/config
+          dir $env:USERPROFILE/.kube/config -EA Ignore
+          echo Trying HOME/.kube/config
+          dir $env:HOME/.kube/config -EA Ignore
+          echo Trying HD/HP/.kube/config
+          dir $env:HOMEDRIVE$ENV:HOMEPATH/.kube/config -EA Ignore
+          echo "Done trying stuff - thank you for your patience"
       - name: Run e2e Tests
         continue-on-error: false
         run: |
-          echo $env:RUNNER_HOME
+          echo HOME: $env:HOME
+          echo HOMEDRIVE: $env:HOMEDRIVE
+          echo HOMEPATH: $env:HOMEPATH
+          echo USERPROFILE: $env:USERPROFILE
+          echo Trying USERPROFILE/.kube/config
+          dir $env:USERPROFILE/.kube/config -EA Ignore
+          echo Trying HOME/.kube/config
+          dir $env:HOME/.kube/config -EA Ignore
+          echo Trying HD/HP/.kube/config
+          dir $env:HOMEDRIVE$ENV:HOMEPATH/.kube/config -EA Ignore
+          echo "Done trying stuff - thank you for your patience"
           npm run test:e2e
+          echo HOME: $env:HOME
+          echo HOMEDRIVE: $env:HOMEDRIVE
+          echo HOMEPATH: $env:HOMEPATH
+          echo USERPROFILE: $env:USERPROFILE
+          echo Trying USERPROFILE/.kube/config
+          dir $env:USERPROFILE/.kube/config -EA Ignore
+          echo Trying HOME/.kube/config
+          dir $env:HOME/.kube/config -EA Ignore
+          echo Trying HD/HP/.kube/config
+          dir $env:HOMEDRIVE$ENV:HOMEPATH/.kube/config -EA Ignore
+          echo "Done trying stuff - thank you for your patience"
       - name: Failed tests
         if: failure()
         run: |
