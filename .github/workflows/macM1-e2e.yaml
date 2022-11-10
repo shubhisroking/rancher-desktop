@@ -2,7 +2,8 @@ name: e2e tests on Mac M1
 
 on:
   push:
-    fix-CI-MacM1
+    branches:
+      fix-CI-MacM1
 
 jobs:
 
