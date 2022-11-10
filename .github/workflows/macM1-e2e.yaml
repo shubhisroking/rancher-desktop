@@ -45,6 +45,7 @@ jobs:
               "suppressSudo": true
             },
             "updater": false,
+            "debug": true,
             "pathManagementStrategy": "rcfiles"
           }
           EOF
