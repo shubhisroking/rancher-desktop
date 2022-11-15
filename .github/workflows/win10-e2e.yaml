@@ -15,8 +15,7 @@ jobs:
     steps:
       - name: Define Execution Policy
         run: |
-          cd $HOME
-          ./psexec64 -i -u "$USERDOMAIN\$USERNAME" PowerShell.exe
+          PsExec64.exe -i -u chivo -accepteula PowerShell.exe
           Set-ExecutionPolicy Bypass -Scope CurrentUser -Force
       - uses: actions/checkout@v3
         with:
@@ -31,15 +30,14 @@ jobs:
       - name: Install scoop
         continue-on-error: true
         run: |
-          cd $HOME
-          ./psexec64 -i -u "$USERDOMAIN\$USERNAME" PowerShell.exe
+          PsExec64.exe -i -u chivo -accepteula PowerShell.exe
           iwr -useb get.scoop.sh | iex
           echo "$HOME/scoop/shims" >> $env:GITHUB_PATH
       - name: Install git
         continue-on-error: true
         run: |
           cd $HOME
-          ./psexec64 -i -u "$USERDOMAIN\$USERNAME" PowerShell.exe
+          PsExec64.exe -i -u chivo -accepteula PowerShell.exe
           scoop config USE_LESSMSI true
           scoop install git
           echo "$HOME/scoop/apps/git/current/bin" >> $env:GITHUB_PATH
@@ -47,20 +45,20 @@ jobs:
         continue-on-error: true
         run: |
           cd $HOME
-          ./psexec64 -i -u "$USERDOMAIN\$USERNAME" PowerShell.exe
+          PsExec64.exe -i -u chivo -accepteula PowerShell.exe
           scoop install unzip
           echo "$HOME/scoop/apps/unzip/current" >> $env:GITHUB_PATH
       - name: Install python
         continue-on-error: true
         run: |
           cd $HOME
-          ./psexec64 -i -u "$USERDOMAIN\$USERNAME" PowerShell.exe
+          PsExec64.exe -i -u chivo -accepteula PowerShell.exe
           scoop install python
           echo "$HOME/scoop/apps/python/current/Scripts" >> $env:GITHUB_PATH
       - name: Cleanup test environment
         run: |
           cd $HOME
-          ./psexec64 -i -u "$USERDOMAIN\$USERNAME" PowerShell.exe
+          PsExec64.exe -i -u chivo -accepteula PowerShell.exe
           if (Test-Path "$HOME/AppData/Local/rancher-desktop") {
             Remove-Item -Path "$HOME/AppData/Local/rancher-desktop" -Recurse -Force
           }
@@ -71,13 +69,13 @@ jobs:
       - name: Install node dependencies
         run: |
           cd $HOME
-          ./psexec64 -i -u "$USERDOMAIN\$USERNAME" PowerShell.exe
+          PsExec64.exe -i -u chivo -accepteula PowerShell.exe
           npm ci
       - name: Run e2e Tests
         continue-on-error: false
         run: |
           cd $HOME
-          ./psexec64 -i -u "$USERDOMAIN\$USERNAME" PowerShell.exe
+          PsExec64.exe -i -u chivo -accepteula PowerShell.exe
           npm run test:e2e
       - name: Failed tests
         if: failure()
