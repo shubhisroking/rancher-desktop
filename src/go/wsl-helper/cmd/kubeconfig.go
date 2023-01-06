@@ -68,21 +68,7 @@ var kubeconfigCmd = &cobra.Command{
 			return createLinkToLocalConfig(configDir, linkPath, configPath)
 		} else {
 			return deleteLinkToLocalConfig(configDir, linkPath, configPath)
-			if errors.Is(err, syscall.EINVAL) {
-				// See if the source's parent dir is a link to the target's parent dir
-				target, err := os.Readlink(configDir)
-				if err != nil {
-					return nil
-				}
-				if target == path.Dir(configPath) {
-					err = os.Remove(linkPath)
-					if err != nil && !errors.Is(err, os.ErrNotExist) {
-						return err
-					}
-				}
-			}
 		}
-		return nil
 	},
 }
 
@@ -118,7 +104,7 @@ func getLinkStatus(configDir string, linkPath string, configPath string) string 
 }
 
 func createLinkToLocalConfig(configDir string, linkPath string, configPath string) error {
-	err = os.Mkdir(configDir, 0o750)
+	err := os.Mkdir(configDir, 0o750)
 	if err != nil && !errors.Is(err, os.ErrExist) {
 		// The error already contains the full path, we can't do better.
 		return err
