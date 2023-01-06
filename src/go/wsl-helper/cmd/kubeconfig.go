@@ -135,16 +135,13 @@ func deleteLinkToLocalConfig(configDir string, linkPath string, configPath strin
 	if !errors.Is(err, syscall.EINVAL) {
 		return err
 	}
-	// If ~/.kube is a link to the mounted /mnt/DRIVE/Users/USER/.kube, delete the link also.
+	// If ~/.kube is a link to the mounted /mnt/DRIVE/Users/USER/.kube, not much we can do
 	target, err = os.Readlink(configDir)
 	if err != nil {
 		return nil
 	}
 	if target == path.Dir(configPath) {
-		err = os.Remove(linkPath)
-		if err != nil && !errors.Is(err, os.ErrNotExist) {
-			return err
-		}
+		return fmt.Errorf("Can't delete %s", configPath)
 	}
 	return nil
 }
