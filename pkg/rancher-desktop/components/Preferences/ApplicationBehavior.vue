@@ -21,6 +21,9 @@ export default Vue.extend({
     onChange<P extends keyof RecursiveTypes<Settings>>(property: P, value: RecursiveTypes<Settings>[P]) {
       this.$store.dispatch('preferences/updatePreferencesData', { property, value });
     },
+    onAdminAccessChange(val: boolean) {
+      this.$store.dispatch('applicationSettings/commitAdminAccess', val);
+    },
   },
 });
 </script>
@@ -38,11 +41,27 @@ export default Vue.extend({
       />
     </rd-fieldset>
     <rd-fieldset
+      data-test="autoStart"
+      :legend-text="t('application.behavior.autoStart.legendText')"
+    >
+      <checkbox
+        label="Allow Rancher Desktop to acquire administrative credentials (sudo access)"
+        :value="hasAdminAccess"
+        @input="onChange('application.adminAccess', $event)"
+      />
+    </rd-fieldset>
+    <rd-fieldset
       data-test="background"
       :legend-text="t('application.behavior.background.legendText')"
       :legend-tooltip="t('application.behavior.background.legendTooltip')"
       class="checkbox-group"
     >
+      <checkbox
+        data-test="automaticUpdatesCheckbox"
+        label="Check for updates automatically"
+        :value="canAutoUpdate"
+        @input="onChange('application.updater.enabled', $event)"
+      />
       <checkbox
         :label="t('application.behavior.startInBackground.label')"
         :value="preferences.startInBackground"
@@ -59,9 +78,29 @@ export default Vue.extend({
       :legend-text="t('application.behavior.notificationIcon.legendText')"
     >
       <checkbox
+        label="Allow collection of anonymous statistics to help us improve Rancher Desktop"
+        :value="preferences.telemetry"
+        @input="onChange('telemetry', $event)"
+      />
+    </rd-fieldset>
+    <rd-fieldset
+      data-test="notificationIcon"
+      :legend-text="t('application.behavior.notificationIcon.legendText')"
+    >
+      <checkbox
         :label="t('application.behavior.notificationIcon.label')"
         :value="preferences.hideNotificationIcon"
         @input="onChange('hideNotificationIcon', $event)"
+      />
+    </rd-fieldset>
+    <rd-fieldset
+      data-test="statistics"
+      legend-text="Statistics"
+    >
+      <checkbox
+        label="Allow collection of anonymous statistics to help us improve Rancher Desktop"
+        :value="preferences.application.telemetry.enabled"
+        @input="onChange('application.telemetry.enabled', $event)"
       />
     </rd-fieldset>
   </div>
