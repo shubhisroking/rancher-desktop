@@ -2,6 +2,7 @@
 
 setup() {
     load '../helpers/load'
+    # Ensure subshells don't inherit a path that includes ~/.rd/bin
     PATH=$(ruby -e 'print ENV["PATH"].split(":").reject{|x| x[".rd/bin"]}.join(":")')
     export PATH="$PATH"
 }
