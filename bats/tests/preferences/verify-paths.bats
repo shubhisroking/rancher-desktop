@@ -38,14 +38,14 @@ setup() {
 #}
 
 @test 'ksh managed' {
-    if [ -f "$HOME/.kshrc" ] ; then
+    if [ -f "$HOME/.kshrc" ]; then
         run ksh -c "which rdctl"
         assert_output --partial '.rd/bin/rdctl'
     fi
 }
 
 @test 'zsh managed' {
-    if [ -f "$HOME/.zshrc" ] ; then
+    if [ -f "$HOME/.zshrc" ]; then
         run zsh -i -c "which rdctl"
         assert_output --partial '.rd/bin/rdctl'
     fi
@@ -67,14 +67,14 @@ setup() {
 #}
 
 @test 'ksh unmanaged' {
-    if [ -f "$HOME/.kshrc" ] ; then
+    if [ -f "$HOME/.kshrc" ]; then
         run ksh -c "which -s rdctl"
         assert_failure
     fi
 }
 
 @test 'zsh unmanaged' {
-    if [ -f "$HOME/.zshrc" ] ; then
+    if [ -f "$HOME/.zshrc" ]; then
         run zsh -i -c "which -s rdctl"
         assert_failure
     fi
