@@ -1,11 +1,13 @@
 setup() {
     load '../helpers/load'
 }
-
-@test 'Verify that initial Behavior is all set to false' {
+@test 'Start up Rancher Desktop' {
     factory_reset
     start_kubernetes
     wait_for_apiserver
+}
+
+@test 'Verify that initial Behavior is all set to false' {
     run bash -c "rdctl list-settings | jq -r '.application.autoStart'"
     assert_output false
     run bash -c "rdctl list-settings | jq -r '.applicaion.startInBackground'"
