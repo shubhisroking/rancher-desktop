@@ -5,20 +5,50 @@ setup() {
 @test 'factory-reset when Rancher Desktop is not running' {
     rdctl factory-reset --verbose
     start_application
+}
+
+@test 'ci #1' {
+    check_installation before
+}
+
+@test 'f-r #2' {
     rdctl shutdown
     rdctl_factory_reset --remove-kubernetes-cache=false --verbose
+}
+
+@test 'check install #2' {
     check_installation
 }
 
 @test 'factory reset - keep cached k8s images' {
     start_application
+}
+
+@test 'ci before #3' {
+    check_installation before
+}
+
+@test 'f-r #3' {
     rdctl_factory_reset --remove-kubernetes-cache=false --verbose
+}
+
+@test 'ci #4' {
     check_installation
 }
 
 @test 'factory reset - delete cached k8s images' {
     start_application
+}
+
+@test 'ci #5' {
+    check_installation before
+}
+
+@test 'f-r #5' {
     rdctl_factory_reset --remove-kubernetes-cache=true --verbose
+}
+
+@test 'ci #6' {
     check_installation
 }
 
@@ -39,8 +69,6 @@ start_application() {
         rdctl set --application.path-management-strategy manual
         rdctl set --application.path-management-strategy rcfiles
     fi
-
-    check_installation before
 }
 
 rdctl_factory_reset() {

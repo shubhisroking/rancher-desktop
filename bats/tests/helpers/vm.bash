@@ -73,7 +73,7 @@ container_engine_info() {
 }
 
 docker_context_exists() {
-    run docker_exe context ls -q
+    run bash -c 'docker context ls -q | grep --no-messages rancher-desktop'
     assert_success
     assert_line "$RD_DOCKER_CONTEXT"
 }
