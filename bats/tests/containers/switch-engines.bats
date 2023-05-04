@@ -38,6 +38,11 @@ verify_post_switch_containers() {
     assert_output --partial "busybox"
     refute_output --partial "nginx"
 }
+run_curl() {
+    run curl localhost:8085
+    assert_success
+    assert_output --partial "Welcome to nginx"
+}
 
 switch_back_verify_post_switch_containers() {
     local name=$1
@@ -50,6 +55,14 @@ switch_back_verify_post_switch_containers() {
     switch_back_verify_post_switch_containers moby
 }
 
+@test 'verify that container UI is accessible moby' {
+    run_curl
+}
+
 @test 'switch back to containerd and verify containers' {
     switch_back_verify_post_switch_containers containerd
+}
+
+@test 'verify that container UI is accessible containerd' {
+    run_curl
 }
