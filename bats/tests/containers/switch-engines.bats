@@ -11,8 +11,8 @@ switch_container_engine() {
 }
 
 pull_containers() {
-    ctrctl run -d -p 8085:80 --restart=no nginx
-    ctrctl run -d --restart=always busybox /bin/sh -c "sleep inf"
+    ctrctl run -d -p 8085:80 --restart=always nginx
+    ctrctl run -d --restart=no busybox /bin/sh -c "sleep inf"
     run ctrctl ps --format '{{json .Image}}'
     assert_output --partial nginx
     assert_output --partial busybox
@@ -22,10 +22,24 @@ pull_containers() {
     factory_reset
 }
 
-@test 'start moby and pull nginx' {
+@test 'start application' {
     start_container_engine
     wait_for_container_engine
+}
+
+@test 'start moby and pull nginx' {
     pull_containers
+}
+
+run_curl() {
+    run curl localhost:8085
+    assert_success
+    assert_output --partial "Welcome to nginx"
+}
+
+@test 'verify that container UI is accessible moby' {
+    try run_curl
+    assert_success
 }
 
 @test "switch to containerd" {
@@ -33,15 +47,15 @@ pull_containers() {
     pull_containers
 }
 
+@test 'verify that container UI is accessible containerd' {
+    try run_curl
+    assert_success
+}
+
 verify_post_switch_containers() {
     run ctrctl ps --format '{{json .Image}}'
-    assert_output --partial "busybox"
-    refute_output --partial "nginx"
-}
-run_curl() {
-    run curl localhost:8085
-    assert_success
-    assert_output --partial "Welcome to nginx"
+    assert_output --partial "nginx"
+    refute_output --partial "busybox"
 }
 
 switch_back_verify_post_switch_containers() {
@@ -55,14 +69,16 @@ switch_back_verify_post_switch_containers() {
     switch_back_verify_post_switch_containers moby
 }
 
-@test 'verify that container UI is accessible moby' {
-    run_curl
+@test 'verify that container UI is accessible switching back to moby' {
+    try run_curl
+    assert_success
 }
 
 @test 'switch back to containerd and verify containers' {
     switch_back_verify_post_switch_containers containerd
 }
 
-@test 'verify that container UI is accessible containerd' {
-    run_curl
+@test 'verify that container UI is accessible switching back to containerd' {
+    try run_curl
+    assert_success
 }
