@@ -32,9 +32,15 @@ pull_containers() {
 }
 
 run_curl() {
-    run curl localhost:8085
-    assert_success
-    assert_output --partial "Welcome to nginx"
+    if is_unix; then
+        run curl localhost:8085
+        assert_success
+        assert_output --partial "Welcome to nginx"
+    elif is_windows; then
+        run wsl -d rancher-desktop curl localhost:8085
+        assert_success
+        assert_output --partial "Welcome to nginx"
+    fi
 }
 
 @test 'verify that container UI is accessible moby' {
