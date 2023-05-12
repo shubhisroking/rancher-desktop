@@ -11,9 +11,10 @@ switch_container_engine() {
 }
 
 pull_containers() {
-    ctrctl run -d -p 8085:80 --restart=always nginx
-    ctrctl run -d --restart=no busybox /bin/sh -c "sleep inf"
+    ctrctl run -d -p 8085:80 --restart=always nginx 1>&3-
+    ctrctl run -d --restart=no busybox /bin/sh -c "sleep inf" 1>&3-
     run ctrctl ps --format '{{json .Image}}'
+    assert_success
     assert_output --partial nginx
     assert_output --partial busybox
 }
@@ -37,7 +38,7 @@ run_curl() {
         assert_success
         assert_output --partial "Welcome to nginx"
     elif is_windows; then
-        run wsl -d rancher-desktop curl localhost:8085
+        run powershell.exe -c "wsl -d rancher-desktop curl localhost:8085"
         assert_success
         assert_output --partial "Welcome to nginx"
     fi
